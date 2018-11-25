@@ -55,6 +55,16 @@ public class EngineRepositoryTest {
         assertThat(engines).isEmpty();
     }
 
+    @Test
+    public void shouldNotContainDuplicates() {
+        Engine engine = prepareEngine();
+        engineRepository.save(engine);
+
+        List<Engine> engines = engineRepository.findByPressureLowerThanAndTemperatureGreaterThan(25, 0);
+
+        assertThat(engines).doesNotHaveDuplicates();
+    }
+
     private Engine prepareEngine() {
         Engine engine = new Engine();
         engine.setId(1L);
