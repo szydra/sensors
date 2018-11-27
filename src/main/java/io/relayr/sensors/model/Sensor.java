@@ -1,5 +1,6 @@
 package io.relayr.sensors.model;
 
+import io.relayr.sensors.validation.ValueInRange;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
+@ValueInRange
 public class Sensor {
 
     @Id

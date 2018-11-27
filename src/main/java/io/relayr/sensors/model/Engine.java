@@ -1,5 +1,6 @@
 package io.relayr.sensors.model;
 
+import io.relayr.sensors.validation.SensorCount;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.Objects;
+
+import static io.relayr.sensors.model.SensorType.PRESSURE;
+import static io.relayr.sensors.model.SensorType.TEMPERATURE;
 
 @Entity
 @Getter
@@ -21,6 +25,8 @@ public class Engine {
     private String name;
 
     @OneToMany(mappedBy = "engine", cascade = CascadeType.ALL)
+    @SensorCount(type = PRESSURE, min = 1, max = 1)
+    @SensorCount(type = TEMPERATURE, min = 1)
     private List<Sensor> sensors;
 
     @Override
