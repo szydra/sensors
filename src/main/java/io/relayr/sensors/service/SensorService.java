@@ -25,25 +25,25 @@ public class SensorService {
                 .orElseThrow(() -> new NoSuchSensorException("Cannot find sensor with id " + id));
     }
 
-    Sensor save(@Valid Sensor sensor) {
+    public Sensor save(@Valid Sensor sensor) {
         return sensorRepository.save(sensor);
     }
 
-    public void setValueById(Long id, Integer value) {
+    public Sensor setValueById(Long id, Integer value) {
         Sensor sensor = findById(id);
         sensor.setValue(value);
-        save(sensor);
+        return sensor;
     }
 
-    public void increaseValueById(Long id, Integer value) {
+    public Sensor increaseValueById(Long id, Integer value) {
         Sensor sensor = findById(id);
         int currentValue = sensor.getValue();
         sensor.setValue(currentValue + value);
-        save(sensor);
+        return sensor;
     }
 
-    public void decreaseValueById(Long id, Integer value) {
-        increaseValueById(id, -value);
+    public Sensor decreaseValueById(Long id, Integer value) {
+        return increaseValueById(id, -value);
     }
 
 }

@@ -7,8 +7,6 @@ import io.relayr.sensors.repository.SensorRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +19,6 @@ import java.util.Optional;
 import static io.relayr.sensors.model.SensorType.PRESSURE;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {SensorService.class, MethodValidationPostProcessor.class})
@@ -32,9 +29,6 @@ public class SensorServiceTest {
 
     @MockBean
     private SensorRepository sensorRepository;
-
-    @Captor
-    private ArgumentCaptor<Sensor> sensorArgumentCaptor;
 
     private Sensor sensor;
 
@@ -97,34 +91,28 @@ public class SensorServiceTest {
     }
 
     @Test
-    public void shouldSaveSensorWithSetValue() {
-        sensorService.setValueById(1L, 15);
+    public void shouldSetSensorValue() {
+        Sensor updatedSensor = sensorService.setValueById(1L, 15);
 
-        verify(sensorRepository).save(sensorArgumentCaptor.capture());
-        Sensor savedSensor = sensorArgumentCaptor.getValue();
-        assertThat(savedSensor)
+        assertThat(updatedSensor)
                 .hasFieldOrPropertyWithValue("id", 1L)
                 .hasFieldOrPropertyWithValue("value", 15);
     }
 
     @Test
-    public void shouldSaveSensorWithIncreasedValue() {
-        sensorService.increaseValueById(1L, 5);
+    public void shouldIncreaseSensorValue() {
+        Sensor updatedSensor = sensorService.increaseValueById(1L, 5);
 
-        verify(sensorRepository).save(sensorArgumentCaptor.capture());
-        Sensor savedSensor = sensorArgumentCaptor.getValue();
-        assertThat(savedSensor)
+        assertThat(updatedSensor)
                 .hasFieldOrPropertyWithValue("id", 1L)
                 .hasFieldOrPropertyWithValue("value", 25);
     }
 
     @Test
-    public void shouldSaveSensorWithDecreaseValue() {
-        sensorService.decreaseValueById(1L, 8);
+    public void shouldDecreaseSensorValue() {
+        Sensor updatedSensor = sensorService.decreaseValueById(1L, 8);
 
-        verify(sensorRepository).save(sensorArgumentCaptor.capture());
-        Sensor savedSensor = sensorArgumentCaptor.getValue();
-        assertThat(savedSensor)
+        assertThat(updatedSensor)
                 .hasFieldOrPropertyWithValue("id", 1L)
                 .hasFieldOrPropertyWithValue("value", 12);
     }
