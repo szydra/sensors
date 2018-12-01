@@ -39,6 +39,15 @@ public class GithubUtilsTest {
     }
 
     @Test
+    public void shouldChangeProtocolToHttps() {
+        String url = "http://github.com/relayr/pdm-test/blob/master/sensors.yml";
+
+        String rawUrl = prepareUrl(url);
+
+        assertThat(rawUrl).isEqualTo("https://raw.githubusercontent.com/relayr/pdm-test/master/sensors.yml");
+    }
+
+    @Test
     public void shouldNotChangeNonGithubUrl() {
         String url = "https://www2.relayr.io/pl/";
 

@@ -15,8 +15,9 @@ class GithubUtils {
     }
 
     private static String changeToGithubRawUrl(String githubUrl) {
-        return githubUrl.replaceAll("/blob", "")
-                .replaceAll("//github", "//raw.githubusercontent");
+        return githubUrl.replaceFirst("http://","https://")
+                .replaceFirst("/blob", "")
+                .replaceFirst("//github", "//raw.githubusercontent");
     }
 
 }
