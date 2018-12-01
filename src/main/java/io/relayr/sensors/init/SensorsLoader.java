@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +23,7 @@ import java.util.List;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 import static com.fasterxml.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS;
 import static io.relayr.sensors.init.GithubUtils.prepareUrl;
+import static org.springframework.core.env.Profiles.of;
 
 @Component
 @ConditionalOnProperty("sensors.yaml.url")
@@ -55,7 +55,7 @@ public class SensorsLoader implements CommandLineRunner {
     private List<SensorDto> readSensors() throws IOException {
         ObjectMapper mapper = prepareYamlMapper();
         List<SensorDto> sensors;
-        if (environment.acceptsProfiles(Profiles.of("dev", "test"))) {
+        if (environment.acceptsProfiles(of("test"))) {
             File file = new ClassPathResource("sensors.yml").getFile();
             sensors = mapper.readValue(file, new TypeReference<List<SensorDto>>() {
             });
