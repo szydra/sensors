@@ -25,6 +25,13 @@ import static com.fasterxml.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITI
 import static io.relayr.sensors.init.GithubUtils.prepareUrl;
 import static org.springframework.core.env.Profiles.of;
 
+/**
+ * <p>Runs at server startup and loads sensors from the yaml file whose address
+ * was passed in the property <code>sensors.yaml.url</code>.</p>
+ * <p>In case of passing an invalid address, the server fails to start.
+ * If no address is specified, invocation of this class is skipped
+ * and the server continues initialization.</p>
+ */
 @Component
 @ConditionalOnProperty("sensors.yaml.url")
 public class SensorsLoader implements CommandLineRunner {
