@@ -36,7 +36,7 @@ public class SensorController {
             case DECREMENT:
                 return sensorService.decreaseValueById(sensorId, value);
             default:
-                throw new IllegalStateException("Unknown operation");
+                throw new IllegalArgumentException("Unknown operation");
         }
     }
 

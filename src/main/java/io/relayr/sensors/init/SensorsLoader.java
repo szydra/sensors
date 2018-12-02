@@ -57,12 +57,10 @@ public class SensorsLoader implements CommandLineRunner {
         List<SensorDto> sensors;
         if (environment.acceptsProfiles(of("test"))) {
             File file = new ClassPathResource("sensors.yml").getFile();
-            sensors = mapper.readValue(file, new TypeReference<List<SensorDto>>() {
-            });
+            sensors = mapper.readValue(file, new SensorList());
         } else {
             URL url = new URL(prepareUrl(sensorsYamlUrl));
-            sensors = mapper.readValue(url, new TypeReference<List<SensorDto>>() {
-            });
+            sensors = mapper.readValue(url, new SensorList());
         }
         return sensors;
     }
@@ -72,6 +70,9 @@ public class SensorsLoader implements CommandLineRunner {
         mapper.enable(ACCEPT_CASE_INSENSITIVE_ENUMS);
         mapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
         return mapper;
+    }
+
+    private static class SensorList extends TypeReference<List<SensorDto>> {
     }
 
 }
