@@ -1,7 +1,10 @@
 package io.relayr.sensors.repository;
 
-import io.relayr.sensors.model.Engine;
-import io.relayr.sensors.model.Sensor;
+import java.util.Arrays;
+import java.util.Optional;
+
+import javax.validation.ConstraintViolationException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,13 +14,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.validation.ConstraintViolationException;
-import java.util.Arrays;
-
 import static io.relayr.sensors.model.SensorType.PRESSURE;
 import static io.relayr.sensors.model.SensorType.TEMPERATURE;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
+import io.relayr.sensors.model.Engine;
+import io.relayr.sensors.model.Sensor;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -97,6 +101,30 @@ public class SensorRepositoryTest {
             sensorRepository.save(sensor);
             entityManager.flush();
         }).doesNotThrowAnyException();
+    }
+
+    @Test
+    public void shouldFindSensorForUpdate() {
+        Sensor sensor = createSensorForTestWithValue(25);
+        sensor.setEngine(engine);
+        engine.setSensors(Arrays.asList(sensor, validSensor));
+
+        sensorRepository.save(sensor);
+        Optional<Sensor> foundSensor = sensorRepository.findByIdForUpdate(1L);
+
+        assertThat(foundSensor).contains(sensor);
+    }
+
+    @Test
+    public void shouldNotFindSensorForUpdate() {
+        Sensor sensor = createSensorForTestWithValue(25);
+        sensor.setEngine(engine);
+        engine.setSensors(Arrays.asList(sensor, validSensor));
+
+        sensorRepository.save(sensor);
+        Optional<Sensor> foundSensor = sensorRepository.findByIdForUpdate(139L);
+
+        assertThat(foundSensor).isEmpty();
     }
 
 }
