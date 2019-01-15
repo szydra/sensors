@@ -54,13 +54,13 @@ public class SensorServiceTest {
         doReturn(Optional.empty()).when(sensorRepository).findById(17L);
 
         assertThatExceptionOfType(NoSuchSensorException.class)
-                .isThrownBy(() -> sensorService.findById(17L))
+                .isThrownBy(() -> sensorService.findByIdForUpdate(17L))
                 .withMessageContaining("Cannot find sensor with id 17");
     }
 
     @Test
     public void shouldReturnSensorForGivenId() {
-        Sensor foundSensor = sensorService.findById(1L);
+        Sensor foundSensor = sensorService.findByIdForUpdate(1L);
 
         assertThat(foundSensor).isEqualTo(sensor)
                 .hasFieldOrPropertyWithValue("id", 1L);
