@@ -1,9 +1,9 @@
 package io.relayr.sensors.service;
 
-import io.relayr.sensors.exception.NoSuchSensorException;
-import io.relayr.sensors.model.Engine;
-import io.relayr.sensors.model.Sensor;
-import io.relayr.sensors.repository.SensorRepository;
+import java.util.Optional;
+
+import javax.validation.ConstraintViolationException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,15 +13,19 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
-import javax.validation.ConstraintViolationException;
-import java.util.Optional;
-
 import static io.relayr.sensors.model.SensorType.PRESSURE;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.doReturn;
 
+import io.relayr.sensors.exception.NoSuchSensorException;
+import io.relayr.sensors.model.Engine;
+import io.relayr.sensors.model.Sensor;
+import io.relayr.sensors.repository.SensorRepository;
+
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {SensorService.class, MethodValidationPostProcessor.class})
+@ContextConfiguration(classes = { SensorService.class, MethodValidationPostProcessor.class })
 public class SensorServiceTest {
 
     @Autowired
@@ -35,7 +39,7 @@ public class SensorServiceTest {
     @Before
     public void setup() {
         sensor = createSensorForTest();
-        doReturn(Optional.of(sensor)).when(sensorRepository).findById(1L);
+        doReturn(Optional.of(sensor)).when(sensorRepository).findByIdForUpdate(1L);
     }
 
     private Sensor createSensorForTest() {
@@ -51,7 +55,7 @@ public class SensorServiceTest {
 
     @Test
     public void shouldThrowExceptionWhenSensorCannotBeFound() {
-        doReturn(Optional.empty()).when(sensorRepository).findById(17L);
+        doReturn(Optional.empty()).when(sensorRepository).findByIdForUpdate(17L);
 
         assertThatExceptionOfType(NoSuchSensorException.class)
                 .isThrownBy(() -> sensorService.findByIdForUpdate(17L))
