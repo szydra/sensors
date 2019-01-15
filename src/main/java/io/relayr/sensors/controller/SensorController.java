@@ -1,40 +1,42 @@
 package io.relayr.sensors.controller;
 
-import io.relayr.sensors.model.Sensor;
-import io.relayr.sensors.service.SensorService;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import io.relayr.sensors.service.UpdatingService;
 
 @RestController
 @RequestMapping("/sensors")
 public class SensorController {
 
-    private SensorService sensorService;
+    private UpdatingService updatingService;
 
     @Autowired
-    public SensorController(SensorService sensorService) {
-        this.sensorService = sensorService;
+    public SensorController(UpdatingService updatingService) {
+        this.updatingService = updatingService;
     }
 
     @PostMapping("/{sensorId}")
     public void updateSensorValue(@PathVariable Long sensorId,
-                                  @RequestBody @Valid SensorUpdateDto updateDto) {
-        Sensor updatedSensor = getUpdatedSensor(sensorId, updateDto);
-        sensorService.save(updatedSensor);
+            @RequestBody @Valid SensorUpdateDto updateDto) {
+        updateSensor(sensorId, updateDto);
     }
 
-    private Sensor getUpdatedSensor(Long sensorId, SensorUpdateDto updateDto) {
+    private void updateSensor(Long sensorId, SensorUpdateDto updateDto) {
         Operation operation = updateDto.getOperation();
         int value = updateDto.getValue();
         switch (operation) {
             case SET:
-                return sensorService.setValueById(sensorId, value);
+                updatingService.setValueById(sensorId, value);
+                break;
             case INCREMENT:
-                return sensorService.increaseValueById(sensorId, value);
+                updatingService.increaseValueById(sensorId, value);
+                break;
             case DECREMENT:
-                return sensorService.decreaseValueById(sensorId, value);
+                updatingService.decreaseValueById(sensorId, value);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown operation");
         }
