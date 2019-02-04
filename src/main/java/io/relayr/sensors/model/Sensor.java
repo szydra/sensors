@@ -30,7 +30,7 @@ public class Sensor {
     @NotNull
     private Integer maxValue;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @NotNull
     private Engine engine;
 
